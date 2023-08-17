@@ -110,7 +110,7 @@
 	
 	async function searchUser(name: string): Promise<string[]> {
 	  const url = 'https://yayasan.amtsilatipusat.com/get_rekening_tabungan.php';
-	  const term = encodeURIComponent(name) || 'umar';
+	  const term = name || 'umar';
 	  const headers = {
 	    'accept': 'application/json, text/javascript, */*; q=0.01',
 	    'accept-language': 'en-ID,en;q=0.9,id-ID;q=0.8,id;q=0.7,en-GB;q=0.6,en-US;q=0.5',

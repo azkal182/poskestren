@@ -54,6 +54,7 @@ const formSchema = z.object({
 export default function PatientPage() {
   const [open, setOpen] = useState(false);
   const [pinjam, setPinjam] = useState(false);
+  const [isLoading, setIsloading] = useState(false);
   const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -90,8 +91,9 @@ export default function PatientPage() {
   }
 
   if (error) return <div>Error fetching data</div>;
+  {/*
   if (!data || !hostels) return <div>Loading...</div>;
-
+*/}
   console.log({ hostels });
   return (
     <div>
@@ -163,7 +165,7 @@ export default function PatientPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {hostels?.data?.map((item: any) => (
+                          {hostels && hostels?.data?.map((item: any) => (
                             <SelectItem
                               value={item.id.toString()}
                               key={item.id}
@@ -365,10 +367,12 @@ export default function PatientPage() {
 
       <DataTable
         columns={columns}
-        data={data.data}
+        data={data?.data }
         //@ts-ignore
-        onAdd={() => setOpen(true)}
+				onAdd={() => setOpen(true)}
+        isLoading={data ? false:true}
       />
+      
     </div>
   );
 }

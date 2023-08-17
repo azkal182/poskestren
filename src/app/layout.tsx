@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: "management for poskestren amtsilati",
   manifest: "/manifest.json",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "cyan" },
+    { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
   appleWebApp: {

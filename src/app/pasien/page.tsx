@@ -1,7 +1,8 @@
 "use client";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { Loader } from "lucide-react";
 import { usePatient } from "@/hooks/usePatient";
 import { useHostel } from "@/hooks/useHostel";
 import { Payment, columns } from "./columns";
@@ -20,6 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -55,6 +57,11 @@ export default function PatientPage() {
   const [open, setOpen] = useState(false);
   const [pinjam, setPinjam] = useState(false);
   const [isLoading, setIsloading] = useState(false);
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showAutocomplete, setShowAutocomplete] = useState(false);
+  const autocompleteRef = useRef(null);
   const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -89,19 +96,70 @@ export default function PatientPage() {
       description: "NAMA " + values.name,
     });
   }
+  
+  const handleSearch = async (searchQuery) => {
+    setQuery(searchQuery);
+    console.log(searchQuery)
+    if (searchQuery.length <= 2) {
+    	
+      setLoading(false);
+      return setResults([]);
+    }
+    setLoading(true);
+
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/sidafa?query=${searchQuery}`
+      );
+      if (response.data.data.length > 0) {
+        setResults(response.data.data);
+        setShowAutocomplete(true);
+      } else {
+        setResults([]);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Function to close the autocomplete when clicking outside of it
+    const handleOutsideClick = (event) => {
+      if (
+        autocompleteRef.current &&
+        !autocompleteRef.current.contains(event.target)
+      ) {
+        setShowAutocomplete(false);
+      }
+    };
+
+    // Attach the outside click event listener
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      // Clean up the event listener on unmount
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
 
   if (error) return <div>Error fetching data</div>;
   {/*
   if (!data || !hostels) return <div>Loading...</div>;
 */}
-  console.log({ hostels });
+  
   return (
     <div>
       <h1 className="text-center font-semibold text-2xl">Daftar Periksa UKS</h1>
-      <Dialog open={open} onOpenChange={() => setOpen(!open)}>
+      <Dialog open={open} onOpenChange={() =>{
+       setOpen(!open)
+      	setResults([]);
+      	form.reset()
+      }}>
         <DialogContent className="sm:max-w-[400px] max-h-[calc(100vh-10%)] overflow-auto">
           <DialogHeader>
-            <DialogTitle>Tambah Pasien</DialogTitle>
+            <DialogTitle>Tambah Daftar Periksa</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>
@@ -110,22 +168,69 @@ export default function PatientPage() {
               onSubmit={form.handleSubmit(onSubmit)}
               className="grid gap-4 py-4"
             >
-              <FormField
+            <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <FormLabel className="text-right">Nama</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="col-span-3"
-                          placeholder="Nama"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="col-start-2 col-span-3" />
+                    <div className="" ref={autocompleteRef}>
+                      <div className="relative grid grid-cols-4 items-center gap-4">
+                        <FormLabel className="text-right">Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            value={field.value}
+                            onChange={(e) => {
+             
+                              field.onChange(e.target.value);
+                              handleSearch(e.target.value);
+                            }}
+                            placeholder="Name"
+                            className="col-span-3"
+                            onFocus={() => {
+                              if (results.length > 0) {
+                                setShowAutocomplete(true);
+                              }
+                            }}
+                          />
+                        </FormControl>
+                         <FormMessage className="col-start-2 col-span-3" />
+                        {loading && (
+                          <Loader className="w-4 h-4 absolute right-4 animate-spin top-2" />
+                        )}
+                      </div>
+                      {showAutocomplete && (
+                        <ul
+                          className={`${
+                            !loading
+                              ? results.length > 0
+                                ? "block"
+                                : "hidden"
+                              : ""
+                          } mt-2 z-50 left-4 right-4 border absolute bg-white max-h-40 overflow-auto`}
+                        >
+                          {loading ? (
+                            <li className="p-2">Loading...</li>
+                          ) : (
+                            results.map((result) => (
+                              <li
+                                key={result.accountNumber}
+                                className="p-2 cursor-pointer hover:bg-accent"
+                                onClick={() => {
+                                  setShowAutocomplete(false);
+                                  form.setValue("name", result.name);
+                                  form.setValue("address", result.address);
+                                }}
+                              >
+                                {result.name} - {result.address}
+                              </li>
+                            ))
+                          )}
+                        </ul>
+                      )}
+                      
                     </div>
+                       
                   </FormItem>
                 )}
               />

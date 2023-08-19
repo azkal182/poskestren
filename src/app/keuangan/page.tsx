@@ -60,6 +60,8 @@ function App() {
         loadOptions={loadOptions}
         onInputChange={handleInputChange}
         onChange={handleChange}
+        components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
+
       />
       <div className="mt-8">
         

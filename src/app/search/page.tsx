@@ -10,7 +10,7 @@ const SearchAutocomplete = () => {
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const autocompleteRef = useRef(null);
 
-  const handleSearch = async (searchQuery) => {
+  const handleSearch = async (searchQuery:any) => {
     setQuery(searchQuery);
     if (searchQuery.length <= 2) {
     	setLoading(false);
@@ -22,6 +22,7 @@ const SearchAutocomplete = () => {
       const response = await axios.get(`http://localhost:3000/api/sidafa?query=${searchQuery}`);
       if (response.data.data.length > 0){
       setResults(response.data.data);
+      
       setShowAutocomplete(true); 
       } else {
       setResults([]);
@@ -36,7 +37,8 @@ const SearchAutocomplete = () => {
 
   useEffect(() => {
     // Function to close the autocomplete when clicking outside of it
-    const handleOutsideClick = (event) => {
+    const handleOutsideClick = (event:any) => {
+     //@ts-ignore
       if (autocompleteRef.current && !autocompleteRef.current.contains(event.target)) {
         setShowAutocomplete(false);
       }
@@ -76,7 +78,7 @@ const SearchAutocomplete = () => {
           {loading ? (
             <li className="p-2">Loading...</li>
           ) : (
-            results.map((result) => (
+            results.map((result:any) => (
               <li
                 key={result.accountNumber}
                 className="p-2 cursor-pointer hover:bg-accent"

@@ -7,54 +7,58 @@ export type Payment = {
   name: string;
   address: string;
   requirement: string;
-  paymentSource: string;
-  totalPayment: number | null;
-  paymentStatus: string | null;
-  hostelId: number;
-  hostel: {
-    id: number;
-    name: string;
-  };
+  payment_source: string;
+  payment_total: number | null;
+  status: string | null;
+  
+  patient:{
+  	name:string;
+  	address: string;
+  	hostel: {
+    	id: number;
+    	name: string;
+  	}
+  }
 };
 
 export const columns: ColumnDef<Payment>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "patient.name",
     header: "Nama",
   },
   {
-    accessorKey: "address",
+    accessorKey: "patient.address",
     header: "Alamat",
   },
   {
-    accessorKey: "hostel.name", // Akses nested property dari objek hostel
-    header: "Hostel",
+    accessorKey: "patient.hostel.name", // Akses nested property dari objek hostel
+    header: "Asrama",
   },
   {
     accessorKey: "requirement",
     header: "Keperluan",
   },
   {
-    accessorKey: "paymentSource",
+    accessorKey: "payment_source",
     header: "Sumber",
   },
   {
-    accessorKey: "totalPayment",
+    accessorKey: "payment_total",
     header: "Total",
     cell: ({ row }) => {
       const total = row.original;
       return (
         <div>
-          {total.totalPayment
+          {total.payment_total
           //@ts-ignore
-            ? parseInt(total.totalPayment).toLocaleString("id-ID")
+            ? parseInt(total.payment_total).toLocaleString("id-ID")
             : ""}
         </div>
       );
     },
   },
   {
-    accessorKey: "paymentStatus",
+    accessorKey: "status",
     header: "Status",
   },
 ];

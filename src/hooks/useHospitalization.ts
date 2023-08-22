@@ -8,25 +8,25 @@ interface Item {
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 
-export const usePatient = () => {
-  const endpoint = "https://encouraging-frog-sari.cyclic.cloud/api/checkups"
+export const useHospitalization = () => {
+  const endpoint = "https://encouraging-frog-sari.cyclic.cloud/api/hospitalizations"
   // const { data, error } = useSWR<Item[]>(endpoint, fetcher);
   const { data, error } = useSWR(endpoint, fetcher)
 
-  const createPatient = async (item: any) => {
+  const createHospitalization = async (item: any) => {
     await axios.post(endpoint, item)
     mutate(endpoint)
   }
 
-  const updatePatient = async (id: number, updatedItem: any) => {
-    await axios.put(`${endpoint}/${id}`, updatedItem)
+  const updateHospitalization = async (updatedItem: any) => {
+    await axios.patch(`${endpoint}`, updatedItem)
     mutate(endpoint)
   }
 
-  const deletePatient = async (id: number) => {
+  const deleteHospitalization = async (id: number) => {
     await axios.delete(`${endpoint}/${id}`)
     mutate(endpoint)
   }
 
-  return { data, error, createPatient, updatePatient, deletePatient }
+  return { data, error, createHospitalization, updateHospitalization, deleteHospitalization }
 }

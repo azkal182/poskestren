@@ -6,7 +6,18 @@
 	
 	interface Result {
 	  balance?: string;
+    transactions?: ITransactions[]
 	}
+
+  interface ITransactions {
+    number:string;
+    type:string;
+    description:string;
+    amount:string;
+    balance:string;
+    teller:string;
+    date:string;
+  }
 	let cook:any;
 	async function getCookie(): Promise<string | null> {
 	  const url = 'https://yayasan.amtsilatipusat.com/';
@@ -95,16 +106,35 @@
 	    });
 	
 	    const $ = cheerio.load(response.data);
+	    const transactions:any = [];
+	    $('table.table-bordered tbody tr').each((index, element) => {
+  const $columns = $(element).find('td');
+  
+  const transaction = {
+    number: $($columns[0]).text(),
+    type: $($columns[1]).text(),
+    date: $($columns[2]).text(),
+    teller: $($columns[3]).text(),
+    description: $($columns[4]).text(),
+    amount: $($columns[5]).text(),
+    balance: $($columns[6]).text()
+  };
+
+  transactions.push(transaction);
+});
+
+
 	    const lastTr = $('body > div.container > table.table.table-bordered > tbody').find('tr').last().find('td').last();
 	
 	    const result: Result = {
-	      balance: lastTr.html() || undefined
+	      balance: lastTr.html() || undefined,
+	      transactions: transactions.reverse()
 	    };
 	    
 	    return result;
 	  } catch (error) {
 	    console.error(error);
-	    return {};
+	    return {}
 	  }
 	}
 	

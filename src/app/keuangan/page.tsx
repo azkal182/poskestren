@@ -2,6 +2,15 @@
 import React, { useState, useEffect } from "react";
 import AsyncSelect from "react-select/async";
 import { Loader } from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 interface IData {
 	name?:string,
@@ -11,7 +20,7 @@ interface IData {
 
 function App() {
   const [inputValue, setValue] = useState("");
-  const [balance, setBalance] = useState("");
+  const [data, setData] = useState("");
   const [selectedValue, setSelectedValue] = useState<IData | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -25,15 +34,16 @@ function App() {
     setSelectedValue(value);
     setLoading(true);
     const data = await getBalance(value.accountNumber);
-    setBalance(data);
+    setData(data);
     setLoading(false);
   };
 
   const getBalance = async (rek:any) => {
     const res = await fetch(`/api/sidafa/${rek}`);
     const { data } = await res.json();
+    console.log(data)
 
-    return data.balance;
+    return data;
   };
   // load options using API call
   const loadOptions = async (inputValue:any) => {
@@ -41,7 +51,7 @@ function App() {
     //const res =  await fetch(`http://jsonplaceholder.typicode.com/posts?userId=${inputValue}`)
     //const data = await res.json()
     const { data } = await res.json();
-    console.log(data);
+    
     return data;
   };
 
@@ -63,17 +73,46 @@ function App() {
         components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
 
       />
-      <div className="mt-8">
+      <div className="mt-4">
         
-        {selectedValue && balance && !loading && (
+        {selectedValue && data && !loading && (
+        	<>
           <div className="grid grid-cols-4">
             <div>Name</div>
-            <div className="col-span-3">: {selectedValue?.name || ""}</div>
+            <div className="col-span-3 font-bold">: {selectedValue?.name || ""}</div>
             <div>Alamat</div>
-            <div className="col-span-3">: {selectedValue?.address || ""}</div>
+            <div className="col-span-3 font-bold">: {selectedValue?.address || ""}</div>
             <div>Saldo</div>
-            <div className="col-span-3">: {balance || 0}</div>
+            <div className="col-span-3 font-bold">: {/*@ts-ignore */}
+            {data?.balance || 0} </div>
           </div>
+          <Table className="mt-2">
+      <TableCaption>A list of your recent debit.</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[100px]">#</TableHead>
+          <TableHead>type</TableHead>
+          <TableHead>description</TableHead>
+          <TableHead>date</TableHead>
+          <TableHead className="text-right">Amount</TableHead>
+          <TableHead className="text-right">Saldo</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+      {/*@ts-ignore*/}
+        {data?.transactions?.slice(0,21).map((item:any) => (
+          <TableRow className={item.type === "Penarikan Tabungan" ?"bg-blue-300 hover:bg-blue-400":""} key={item.number}>
+            <TableCell className="font-medium">{item.number}</TableCell>
+            <TableCell>{item.type}</TableCell>
+            <TableCell>{item.description}</TableCell>
+            <TableCell>{item.date}</TableCell>
+            <TableCell className="text-right">{item.amount}</TableCell>
+            <TableCell className="text-right font-bold">{item.balance}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+          </>
         )}
       </div>
       

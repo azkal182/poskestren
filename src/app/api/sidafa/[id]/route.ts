@@ -10,6 +10,7 @@ import { NextResponse } from 'next/server'
   const id = params.id // 'a', 'b', or 'c'
   //@ts-ignore
   const data = await getBalance(id)
+
   
   return NextResponse.json({ data })
 }

@@ -80,7 +80,7 @@ export default function FormHospitalization({modalClose}:{modalClose:()=>void}){
 
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/sidafa?query=${searchQuery}`
+        `/api/sidafa?query=${searchQuery}`
       );
       if (response.data.data.length > 0) {
         setResults(response.data.data);

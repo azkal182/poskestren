@@ -71,7 +71,8 @@ function App() {
         onInputChange={handleInputChange}
         onChange={handleChange}
         components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
-
+className="react-select-container"
+  classNamePrefix="react-select"
       />
       <div className="mt-4">
         
@@ -101,7 +102,7 @@ function App() {
       <TableBody>
       {/*@ts-ignore*/}
         {data?.transactions?.slice(0,21).map((item:any) => (
-          <TableRow className={item.type === "Penarikan Tabungan" ?"bg-blue-100 hover:bg-blue-200":""} key={item.number}>
+          <TableRow className={item.type === "Penarikan Tabungan" ?"bg-blue-100 hover:bg-blue-200 dark:bg-slate-700 dark:text-slate-200":""} key={item.number}>
             <TableCell className="font-medium">{item.number}</TableCell>
             <TableCell>{item.type}</TableCell>
             <TableCell>{item.description}</TableCell>

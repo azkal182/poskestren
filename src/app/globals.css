@@ -138,3 +138,14 @@
   }
 }
 
+.react-select__menu {
+	@apply bg-background
+}
+
+.react-select__menu-list {
+	@apply bg-background
+}
+
+.react-select__option {
+	@apply bg-background
+}

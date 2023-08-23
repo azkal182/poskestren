@@ -21,7 +21,7 @@ export const columns: ColumnDef<Hospitalization>[] = [
     header: 'No',
     accessorKey: 'id',
     //@ts-ignore
-    cell: ({ row, flatRows }) => {
+    Cell: ({ row, flatRows }) => {
       return flatRows.indexOf(row) + 1;
     },
   },

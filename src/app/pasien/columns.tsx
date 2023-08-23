@@ -26,7 +26,7 @@ export const columns: ColumnDef<Payment>[] = [
     header: 'No',
     accessorKey: 'id',
     //@ts-ignore
-    cell: ({ row, flatRows }) => {
+    Cell: ({ row, flatRows }) => {
       return flatRows.indexOf(row) + 1;
     },
   },

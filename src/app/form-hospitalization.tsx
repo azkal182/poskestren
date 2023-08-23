@@ -1,6 +1,7 @@
 "use client"
 
 import {useState, useEffect, useRef} from "react"
+import { useToast } from "@/components/ui/use-toast";
 import axios from "axios"
 import { Loader } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,6 +43,8 @@ export default function FormHospitalization({modalClose}:{modalClose:()=>void}){
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isSubmiting, setIsSubmiting] = useState(false);
+  const { toast } = useToast();
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const autocompleteRef = useRef(null);
   const {
@@ -60,11 +63,17 @@ export default function FormHospitalization({modalClose}:{modalClose:()=>void}){
   
   
   async function onSubmit(values: z.infer<typeof formSchema>) {
+  	setIsSubmiting(true)
     await createHospitalization(values);
     //setOpen(false);
     modalClose()
+    setIsSubmiting(false)
     setResults([]);
     form.reset();
+    toast({
+      title: "Data berhasil ditambahkan",
+      description: "NAMA " + values.name,
+    });
   }
 
   const handleSearch = async (searchQuery:string) => {
@@ -259,6 +268,9 @@ export default function FormHospitalization({modalClose}:{modalClose:()=>void}){
                 )}
               />
             </form>
+            <Button disabled={isSubmiting} form="addHospitalization" type="submit">
+              Save data
+            </Button>
           </Form>
           </>
   	)

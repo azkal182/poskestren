@@ -85,12 +85,6 @@ export default function PatientPage() {
             <DialogTitle>Tambah Daftar Periksa</DialogTitle>
           </DialogHeader>
 					<FormCheckup modalClose={()=>setOpen(!open)}/>
-
-          <DialogFooter>
-            <Button form="addPatient" type="submit">
-              Save changes
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 

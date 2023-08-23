@@ -9,7 +9,7 @@ interface Item {
 const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 
 export const useHospitalization = () => {
-  const endpoint = "https://encouraging-frog-sari.cyclic.cloud/api/hospitalizations"
+  const endpoint = (process.env.API_URL || "http://localhost:8000") + "/api/hospitalizations"
   // const { data, error } = useSWR<Item[]>(endpoint, fetcher);
   const { data, error } = useSWR(endpoint, fetcher)
 

@@ -17,6 +17,13 @@ export type Hospitalization = {
 };
 
 export const columns: ColumnDef<Hospitalization>[] = [
+		{
+    header: 'No',
+    accessorKey: 'id',
+    Cell: ({ row, flatRows }) => {
+      return flatRows.indexOf(row) + 1;
+    },
+  },
   {
     accessorKey: "patient.name",
     header: "Nama",

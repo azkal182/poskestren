@@ -105,11 +105,6 @@ export default function Home() {
             <DialogTitle>Masukan nama santri!</DialogTitle>
           </DialogHeader>
           <FormHospitalization modalClose={() => setOpen(!open)}/>
-          <DialogFooter>
-            <Button form="addHospitalization" type="submit">
-              Save data
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
       <Button onClick={handleExportExcel}>

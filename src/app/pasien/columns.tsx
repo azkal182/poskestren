@@ -22,6 +22,13 @@ export type Payment = {
 };
 
 export const columns: ColumnDef<Payment>[] = [
+	{
+    header: 'No',
+    accessorKey: 'id',
+    Cell: ({ row, flatRows }) => {
+      return flatRows.indexOf(row) + 1;
+    },
+  },
   {
     accessorKey: "patient.name",
     header: "Nama",
@@ -29,6 +36,9 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "patient.address",
     header: "Alamat",
+    cell: ({ row }) => {
+      return row.original.patient.address.split(",")[0].trim();
+    },
   },
   {
     accessorKey: "patient.hostel.name", // Akses nested property dari objek hostel

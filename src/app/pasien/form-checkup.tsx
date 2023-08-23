@@ -46,6 +46,7 @@ export default function FormCheckup({modalClose}:{modalClose: ()=> void}){
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isSubmiting, setIsSubmiting] = useState(false);
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const autocompleteRef = useRef(null);
   const { toast } = useToast();
@@ -73,10 +74,11 @@ export default function FormCheckup({modalClose}:{modalClose: ()=> void}){
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     
-    
+    setIsSubmiting(true)
     await createPatient(values);
     form.reset();
     modalClose()
+    setIsSubmiting(false)
     toast({
       title: "Data berhasil ditambahkan",
       description: "NAMA " + values.name,
@@ -431,6 +433,9 @@ export default function FormCheckup({modalClose}:{modalClose: ()=> void}){
                 )}
               />
             </form>
+            <Button disabled={isSubmiting} form="addPatient" type="submit">
+              Save changes
+            </Button>
           </Form>
 		)
 	

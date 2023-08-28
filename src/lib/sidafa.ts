@@ -1,3 +1,4 @@
+	"use server"
 	import axios from 'axios';
 	import https from 'https';
 	import cheerio from 'cheerio';

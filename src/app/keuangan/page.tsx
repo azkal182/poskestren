@@ -1,5 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { SearchName } from "@/components/search-sidafa";
+import { getBalance as getSaldo } from "@/lib/sidafa";
 import AsyncSelect from "react-select/async";
 import { Loader } from 'lucide-react';
 import {
@@ -61,6 +63,7 @@ function App() {
         Cek Tabungan 
       </h3>
       <pre>Masukan Nama yang akan di cari :</pre>
+      {/*
       <AsyncSelect
         cacheOptions
         defaultOptions
@@ -74,6 +77,25 @@ function App() {
 className="react-select-container"
   classNamePrefix="react-select"
       />
+      */}
+         <SearchName
+            
+              placeholder="Nama"
+              autoComplete="off"
+              id="name"
+              name="name"
+              className="mt-2 w-full border border-slate-300"
+
+              selected={async (data:any) => {
+                setLoading(true)
+                const result = await getSaldo(data.accountNumber)
+                //@ts-ignore
+                setData(result)
+                //@ts-ignore
+                setSelectedValue(data)
+                setLoading(false)
+              }}
+            />
       <div className="mt-4">
         
         {selectedValue && data && !loading && (

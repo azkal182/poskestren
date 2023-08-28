@@ -6,34 +6,63 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
-}
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 
-model User {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  username String  @unique
-  name  String
-  password String
-  
 }
 
 model Patient {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  name            String
-  address         String
-  requirement     String
-  totalPayment    Int?
-  remainingPayment Int?
-  paymentSource   String
-  paymentStatus   String?
-  hostel Hostel @relation(fields: [hostelId],references: [id])
-  hostelId String @db.ObjectId
+  id                String             @id @default(uuid())
+  name              String
+  address           String?
+  hospitalizations  Hospitalization?
+  checkUps          CheckUp?
+  borrowMoneyInCash BorrowMoneyInCash?
+  hostelId          String
+  hostel            Hostel             @relation(fields: [hostelId], references: [id])
+}
+
+model Hospitalization {
+  id         String    @id @default(uuid())
+  patientId  String    @unique
+  complaint  String
+  status     String?
+  created_at DateTime  @default(now())
+  return_at  DateTime?
+  selisih    Int?
+  patient    Patient   @relation(fields: [patientId], references: [id])
+}
+
+model CheckUp {
+  id                String             @id @default(uuid())
+  patientId         String             @unique
+  requirement       String
+  payment_source    String
+  payment_total     Float?
+  payment           Float?
+  status            String?
+  created_at        DateTime           @default(now())
+  payment_at        DateTime?
+  patient           Patient            @relation(fields: [patientId], references: [id])
+  borrowMoneyInCash BorrowMoneyInCash?
+}
+
+model BorrowMoneyInCash {
+  id                String             @id @default(uuid())
+  patientId         String    @unique
+  checkUpId         String    @unique
+  payment           Float
+  status            String?
+  payment_date_time DateTime?
+  created_at        DateTime  @default(now())
+  payment_at        DateTime?
+  patient           Patient   @relation(fields: [patientId], references: [id])
+  checkUp           CheckUp   @relation(fields: [checkUpId], references: [id])
 }
 
 model Hostel {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  Patient Patient[]
-
+  id      String             @id @default(uuid())
+  name    String
+  patient Patient[]
 }

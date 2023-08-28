@@ -17,20 +17,22 @@ export type Hospitalization = {
 };
 
 export const columns: ColumnDef<Hospitalization>[] = [
-		{
-    header: 'No',
-    accessorKey: 'id',
-    //@ts-ignore
-    Cell: ({ row, flatRows }) => {
-      return flatRows.indexOf(row) + 1;
+	{
+    accessorKey: "index",
+    header: "No",
+    cell: ({ row }) => {
+      return <div className="text-center">{row.index +1}</div>;
     },
+    enableHiding: true,
   },
   {
     accessorKey: "patient.name",
+    id:"name",
     header: "Nama",
     cell: ({ row }) => {
       return <div>{row.original.patient.name}</div>;
     },
+    enableHiding: true,
   },
   {
     accessorKey: "patient.address",
@@ -51,5 +53,8 @@ export const columns: ColumnDef<Hospitalization>[] = [
   {
     accessorKey: "status",
     header: "Status",
+    filterFn: (row, id, value) => {
+      return <div className="text-center">value.includes(row.getValue(id))</div>
+    },
   },
 ];

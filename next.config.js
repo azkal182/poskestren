@@ -8,5 +8,8 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 });
 
 module.exports = withPWA({
+	experimental: {
+    serverActions: true,
+  },
   // Your Next.js config
 });

@@ -10,25 +10,25 @@ export type Payment = {
   payment_source: string;
   payment_total: number | null;
   status: string | null;
-  
-  patient:{
-  	name:string;
-  	address: string;
-  	hostel: {
-    	id: number;
-    	name: string;
-  	}
-  }
+
+  patient: {
+    name: string;
+    address: string;
+    hostel: {
+      id: number;
+      name: string;
+    };
+  };
 };
 
 export const columns: ColumnDef<Payment>[] = [
-	{
-    header: 'No',
-    accessorKey: 'id',
-    //@ts-ignore
-    Cell: ({ row, flatRows }) => {
-      return flatRows.indexOf(row) + 1;
+  {
+    accessorKey: "index",
+    header: "No",
+    cell: ({ row }) => {
+      return <div className="text-center">{row.index + 1}</div>;
     },
+    enableHiding: true,
   },
   {
     accessorKey: "patient.name",
@@ -61,8 +61,8 @@ export const columns: ColumnDef<Payment>[] = [
       return (
         <div>
           {total.payment_total
-          //@ts-ignore
-            ? parseInt(total.payment_total).toLocaleString("id-ID")
+            ? //@ts-ignore
+              parseInt(total.payment_total).toLocaleString("id-ID")
             : ""}
         </div>
       );

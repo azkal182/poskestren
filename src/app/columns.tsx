@@ -1,6 +1,4 @@
-import {
-  ColumnDef
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 export type Hospitalization = {
   id: number;
   complaint: string;
@@ -17,17 +15,17 @@ export type Hospitalization = {
 };
 
 export const columns: ColumnDef<Hospitalization>[] = [
-	{
+  {
     accessorKey: "index",
     header: "No",
     cell: ({ row }) => {
-      return <div className="text-center">{row.index +1}</div>;
+      return <div className="text-center">{row.index + 1}</div>;
     },
     enableHiding: true,
   },
   {
     accessorKey: "patient.name",
-    id:"name",
+    id: "name",
     header: "Nama",
     cell: ({ row }) => {
       return <div>{row.original.patient.name}</div>;
@@ -53,8 +51,11 @@ export const columns: ColumnDef<Hospitalization>[] = [
   {
     accessorKey: "status",
     header: "Status",
+    //@ts-ignore
     filterFn: (row, id, value) => {
-      return <div className="text-center">value.includes(row.getValue(id))</div>
+      return (
+        <div className="text-center">value.includes(row.getValue(id))</div>
+      );
     },
   },
 ];

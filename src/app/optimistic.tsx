@@ -1,28 +1,21 @@
 "use client";
-import Image from "next/image";
-import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { experimental_useOptimistic as useOptimistic } from "react";
 import { Plus } from "lucide-react";
 
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Button } from "@/components/ui/button";
 
-import { Hospitalization, columns } from "./columns";
+import {columns } from "./columns";
 
 import FormHospitalization from "./form-hospitalization";
 import DataTable from "./data-table";
 import * as XLSX from "xlsx";
-import { useHospitalization } from "@/hooks/useHospitalization";
 
 export default function Optimistic({
   datas,
@@ -35,8 +28,10 @@ export default function Optimistic({
   const [datasOptimistic, addDatasOptimistic] = useOptimistic(
     datas,
     (state, newData) => {
-      //@ts-ignore
-      const updatedIndex = state.findIndex((data: any) => data.id === newData.id  );
+      const updatedIndex = state.findIndex(
+        //@ts-ignore
+        (data: any) => data.id === newData.id,
+      );
 
       if (updatedIndex !== -1) {
         const newState = [...state];
@@ -46,7 +41,7 @@ export default function Optimistic({
       }
 
       return [...state, newData];
-    }
+    },
   );
 
   function formatDate(dateString: any) {
@@ -72,8 +67,11 @@ export default function Optimistic({
     //alert(JSON.stringify(rows))
     // create workbook and worksheet
     const workbook = XLSX.utils.book_new();
-    //@ts-ignore
-    const worksheet = XLSX.utils.json_to_sheet(rows, {origin: "A4",skipHeader: false,});
+    const worksheet = XLSX.utils.json_to_sheet(rows, {
+      //@ts-ignore
+      origin: "A4",
+      skipHeader: false,
+    });
 
     // Merge cells for the header title
     worksheet["A1"] = { t: "s", v: "Daftar Santri" }; // Change title as desired

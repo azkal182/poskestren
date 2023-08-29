@@ -2,16 +2,16 @@
 
 import { useState } from "react";
 import { returnHospitalization } from "@/actions/hospitalization-action";
-import { 
-   ArrowDownIcon, 
-   ArrowRightIcon, 
-   ArrowUpIcon, 
-   CheckCircledIcon, 
-   CircleIcon, 
-   CrossCircledIcon, 
-   QuestionMarkCircledIcon, 
-   StopwatchIcon, 
- } from "@radix-ui/react-icons"
+import {
+  ArrowDownIcon,
+  ArrowRightIcon,
+  ArrowUpIcon,
+  CheckCircledIcon,
+  CircleIcon,
+  CrossCircledIcon,
+  QuestionMarkCircledIcon,
+  StopwatchIcon,
+} from "@radix-ui/react-icons";
 import {
   ColumnDef,
   flexRender,
@@ -19,12 +19,12 @@ import {
   useReactTable,
   ColumnFiltersState,
   getFilteredRowModel,
-    getFacetedRowModel, 
-   getFacetedUniqueValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
 } from "@tanstack/react-table";
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
- 
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -57,8 +57,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { DataTableFacetedFilter } from "./data-table-filter"
+} from "@/components/ui/dropdown-menu";
+import { DataTableFacetedFilter } from "./data-table-filter";
 import { useHospitalization } from "@/hooks/useHospitalization";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -78,20 +78,19 @@ type THospitalization = {
   selisih?: string;
 };
 
+export const statuses = [
+  {
+    value: "inap",
+    label: "inap",
+    icon: QuestionMarkCircledIcon,
+  },
+  {
+    value: "pulang",
+    label: "pulang",
+    icon: CircleIcon,
+  },
+];
 
-export const statuses = [ 
-   { 
-     value: "inap", 
-     label: "inap", 
-     icon: QuestionMarkCircledIcon, 
-   }, 
-   { 
-     value: "pulang", 
-     label: "pulang", 
-     icon: CircleIcon, 
-   }
- ]
- 
 export default function DataTable<TData, TValue>({
   columns,
   data,
@@ -100,18 +99,15 @@ export default function DataTable<TData, TValue>({
   datasOptimistic,
   isLoading = false,
 }: DataTableProps<TData, TValue>) {
-  
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
-    []
-  )
-  
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-		state: {
+    state: {
       columnFilters,
     },
   });
@@ -120,8 +116,9 @@ export default function DataTable<TData, TValue>({
   const { toast } = useToast();
   const { updateHospitalization } = useHospitalization();
   const handleUpdate = async () => {
-    //@ts-ignore
-    const selisih = Math.floor((new Date() - new Date(deleteData.created_at)) / (1000 * 60 * 60 * 24)
+    const selisih = Math.floor(
+      //@ts-ignore
+      (new Date() - new Date(deleteData.created_at)) / (1000 * 60 * 60 * 24),
     );
 
     /*
@@ -142,7 +139,7 @@ export default function DataTable<TData, TValue>({
     };
     // Mencari objek dengan id 2
     const dataUpdate = datasOptimistic.find(
-      (obj: any) => obj.id === deleteData.id
+      (obj: any) => obj.id === deleteData.id,
     );
     if (dataUpdate) {
       dataUpdate.status = "pulang";
@@ -161,16 +158,13 @@ export default function DataTable<TData, TValue>({
 
   return (
     <div>
-      
-      <AlertDialog
-        open={modalOpen}
-      >
+      <AlertDialog open={modalOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-          {/*@ts-ignore*/}
-          apakah <b>{deleteData?.patient?.name}</b> akan pulang ?
+              {/*@ts-ignore*/}
+              apakah <b>{deleteData?.patient?.name}</b> akan pulang ?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -189,7 +183,6 @@ export default function DataTable<TData, TValue>({
       </AlertDialog>
 
       <div className="flex items-center py-4">
-       
         <Input
           placeholder="Filter name..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -198,20 +191,15 @@ export default function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        
-              {table.getColumn("status") && ( 
-           <DataTableFacetedFilter 
-             column={table.getColumn("status")} 
-             title="Status" 
-             options={statuses} 
-           /> 
-         )}
-
+        {table.getColumn("status") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("status")}
+            title="Status"
+            options={statuses}
+          />
+        )}
       </div>
-      
 
-      
-      
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -224,7 +212,7 @@ export default function DataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -249,7 +237,7 @@ export default function DataTable<TData, TValue>({
                         <ContextMenuTrigger>
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                         </ContextMenuTrigger>
                         <ContextMenuContent>

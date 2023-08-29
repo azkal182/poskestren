@@ -81,7 +81,7 @@ export default function FormHospitalization({
     const patientId = uuidv4();
     const id = uuidv4();
     const hostel = hostels.filter(
-      (data: any) => data.id === FormData.hostelId
+      (data: any) => data.id === FormData.hostelId,
     )[0];
     FormData.patientId = patientId;
 
@@ -151,8 +151,7 @@ export default function FormHospitalization({
               id="name"
               name="name"
               className="col-span-3"
-
-              selected={(data:any) => {
+              selected={(data: any) => {
                 setValue("name", data.name);
                 setValue("address", data.address);
               }}
@@ -228,7 +227,6 @@ export default function FormHospitalization({
           </div>
         </div>
         <Button type="submit">Save Data</Button>
-        
       </form>
     </>
   );

@@ -1,5 +1,8 @@
 import prisma from '@/lib/prisma'
 
+
+export const dynamic = "force-dynamic"; // If you want no caching at all
+
 export default async function HomePage(){
 	const data = await prisma.hospitalization.findMany({
 		where:{

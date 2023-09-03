@@ -64,6 +64,7 @@ const SearchName = React.forwardRef<HTMLInputElement, InputProps>(
         //setShowAutocomplete(false)
         setCache({ ...cache, [inputValue]: [] }); // Simpan input yang tidak valid ke dalam cache
         setSearchResults([]);
+        setShowAutocomplete(false)
       }
 
       return () => {

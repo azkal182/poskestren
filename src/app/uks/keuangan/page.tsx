@@ -26,7 +26,12 @@ function App() {
   const [selectedValue, setSelectedValue] = useState<IData | null>(null);
   const [loading, setLoading] = useState(false);
 
-
+const formatNumber = (value:any)=>{
+	const amountWithoutCommas = parseFloat(
+        value.replace(/[^0-9.-]+/g, "")
+      );
+      return amountWithoutCommas.toLocaleString('id-ID')
+}
   
 
   return (
@@ -69,8 +74,15 @@ function App() {
               <div>Saldo</div>
               <div className="col-span-3 font-bold">
                 : {/*@ts-ignore */}
-                {data?.balance || 0}{" "}
+               Rp.  {data?.balance ? formatNumber(data?.balance) : 0}{" "}
               </div>
+              {/*
+              <div>Jumlah</div>
+              <div className="col-span-3 font-bold">
+                : 
+                Rp. {data?.totalAmount.toLocaleString('id-ID') || 0}{" "}
+              </div>
+              */}
             </div>
             <Table className="mt-2">
               <TableCaption>A list of your recent debit.</TableCaption>

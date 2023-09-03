@@ -43,13 +43,13 @@ export default async function HomePage(){
 	return (
 		<>
 		
-			<h2 className="text-center text-xl font-bold mb-4">Daftar santri yang berada di UKS</h2>
+			<h2 className="text-center text-xl font-bold mb-4">Data anak sakit di poskestren</h2>
       {Object.keys(groupByHostel).map((hostelName:any,i: number) => (
         <div key={hostelName}>
           <h3 className={`font-bold ${i !== 0 ? "mt-4":""}`}># {hostelName}</h3>
           <ul className="list-decimal ml-4">
             {groupByHostel[hostelName].map((item:any) => (
-              <li className="" key={item.id}>{item.patient.name} ({item.patient.address.split(",")[0].trim()}) {item.patient.class ? ', kelas '+ item.patient.class:''}, {item.complaint} - ({hitungSelisihHari(item.created_at)} hari) </li>
+              <li className="" key={item.id}>{item.patient.name} ({item.patient.address.split(",")[0].trim()}) ,{item.patient.hostel.name} {item.patient.class ? ', kelas '+ item.patient.class:''}, {item.complaint} - ({hitungSelisihHari(item.created_at)} hari) </li>
             ))}
           </ul>
         </div>

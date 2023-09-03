@@ -1,5 +1,5 @@
 "use server";
-import axios,  {AxiosRequestConfig} from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import https from "https";
 import cheerio from "cheerio";
 
@@ -33,7 +33,7 @@ async function getCookie(): Promise<string | null> {
     const cookies = response.headers["set-cookie"];
     const phpSessId = extractPhpSessId(cookies);
     cook = phpSessId;
-    
+
     return phpSessId;
   } catch (error: any) {
     console.error("Error:", error.message);
@@ -44,7 +44,7 @@ async function getCookie(): Promise<string | null> {
 function extractPhpSessId(cookies: any) {
   if (cookies) {
     const phpSessIdCookie = cookies.find((cookie: any) =>
-      cookie.includes("PHPSESSID"),
+      cookie.includes("PHPSESSID")
     );
     if (phpSessIdCookie) {
       const matches = phpSessIdCookie.match(/PHPSESSID=([^;]+)/);
@@ -132,17 +132,33 @@ async function getBalance(rek: string): Promise<Result> {
     });
 
     const lastTr = $(
-      "body > div.container > table.table.table-bordered > tbody",
+      "body > div.container > table.table.table-bordered > tbody"
     )
       .find("tr")
       .last()
       .find("td")
       .last();
+      
+      const filter = transactions.filter(
+      (data: any) => data.type === "Setor Tabungan Dari Transfer Bank"
+    );
+
+    let totalAmount = 0;
+
+    filter.forEach((item) => {
+      const amountWithoutCommas = parseFloat(
+        item.amount.replace(/[^0-9.-]+/g, "")
+      );
+      totalAmount += amountWithoutCommas;
+    });
+    
 
     const result: Result = {
       balance: lastTr.html() || undefined,
       transactions: transactions.reverse(),
+      totalAmount
     };
+    
 
     return result;
   } catch (error) {
@@ -151,9 +167,7 @@ async function getBalance(rek: string): Promise<Result> {
   }
 }
 
-
 async function getBalance2(rek: string): Promise<Result> {
-  
   const url =
     "https://yayasan.amtsilatipusat.com/?x=YUdsemRHOXlhVjkwWVdKMWJtZGhiZz09";
   const headers = {
@@ -171,8 +185,8 @@ async function getBalance2(rek: string): Promise<Result> {
     const response = await axios.post(url, data, {
       headers,
     });
-    
-    console.log(response.data)
+
+    console.log(response.data);
 
     const $ = cheerio.load(response.data);
     const transactions: any = [];
@@ -193,7 +207,7 @@ async function getBalance2(rek: string): Promise<Result> {
     });
 
     const lastTr = $(
-      "body > div.container > table.table.table-bordered > tbody",
+      "body > div.container > table.table.table-bordered > tbody"
     )
       .find("tr")
       .last()
@@ -212,8 +226,10 @@ async function getBalance2(rek: string): Promise<Result> {
   }
 }
 
-
-async function searchUser(name: string,options?: AxiosRequestConfig): Promise<string[]> {
+async function searchUser(
+  name: string,
+  options?: AxiosRequestConfig
+): Promise<string[]> {
   const url = "https://yayasan.amtsilatipusat.com/get_rekening_tabungan.php";
   const term = name || "";
   const headers = {
@@ -234,7 +250,6 @@ async function searchUser(name: string,options?: AxiosRequestConfig): Promise<st
   };
 
   try {
-  	
     const response = await axios.get(url, {
       headers,
       params: {
@@ -245,7 +260,7 @@ async function searchUser(name: string,options?: AxiosRequestConfig): Promise<st
     });
 
     const list: string[] = response.data.map((data: any) =>
-      parseString(data.label),
+      parseString(data.label)
     );
     //console.log({list})
     return list;

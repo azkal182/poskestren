@@ -1,5 +1,5 @@
 "use server";
-import axios from "axios";
+import axios,  {AxiosRequestConfig} from "axios";
 import https from "https";
 import cheerio from "cheerio";
 
@@ -33,6 +33,7 @@ async function getCookie(): Promise<string | null> {
     const cookies = response.headers["set-cookie"];
     const phpSessId = extractPhpSessId(cookies);
     cook = phpSessId;
+    
     return phpSessId;
   } catch (error: any) {
     console.error("Error:", error.message);
@@ -150,7 +151,69 @@ async function getBalance(rek: string): Promise<Result> {
   }
 }
 
-async function searchUser(name: string): Promise<string[]> {
+
+async function getBalance2(rek: string): Promise<Result> {
+  
+  const url =
+    "https://yayasan.amtsilatipusat.com/?x=YUdsemRHOXlhVjkwWVdKMWJtZGhiZz09";
+  const headers = {
+    accept:
+      "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+    "accept-language":
+      "en-ID,en;q=0.9,id-ID;q=0.8,id;q=0.7,en-GB;q=0.6,en-US;q=0.5",
+    "content-type": "application/x-www-form-urlencoded",
+    "upgrade-insecure-requests": "1",
+    cookie: "PHPSESSID=f3s8fbdb0a95eu4j5q4df3sgtd",
+  };
+  const data = `id=&i0=${rek}&cari=`;
+
+  try {
+    const response = await axios.post(url, data, {
+      headers,
+    });
+    
+  //  console.log(response.data)
+
+    const $ = cheerio.load(response.data);
+    const transactions: any = [];
+    $("table.table-bordered tbody tr").each((index, element) => {
+      const $columns = $(element).find("td");
+
+      const transaction = {
+        number: $($columns[0]).text(),
+        type: $($columns[1]).text(),
+        date: $($columns[2]).text(),
+        teller: $($columns[3]).text(),
+        description: $($columns[4]).text(),
+        amount: $($columns[5]).text(),
+        balance: $($columns[6]).text(),
+      };
+
+      transactions.push(transaction);
+    });
+
+    const lastTr = $(
+      "body > div.container > table.table.table-bordered > tbody",
+    )
+      .find("tr")
+      .last()
+      .find("td")
+      .last();
+
+    const result: Result = {
+      balance: lastTr.html() || undefined,
+      transactions: transactions.reverse(),
+    };
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
+}
+
+
+async function searchUser(name: string,options?: AxiosRequestConfig): Promise<string[]> {
   const url = "https://yayasan.amtsilatipusat.com/get_rekening_tabungan.php";
   const term = name || "";
   const headers = {
@@ -171,16 +234,20 @@ async function searchUser(name: string): Promise<string[]> {
   };
 
   try {
+  	
     const response = await axios.get(url, {
       headers,
       params: {
         term,
       },
+      cancelToken: options?.cancelToken,
+      ...options,
     });
 
     const list: string[] = response.data.map((data: any) =>
       parseString(data.label),
     );
+    //console.log({list})
     return list;
   } catch (error) {
     console.error(error);
@@ -207,4 +274,4 @@ function parseString(inputString: string): string {
 
 //searchUser("dani").then(data => console.log(data));
 //getBalance("2.1.1.A2100373890").then(data => console.log(data));
-export { searchUser, getBalance };
+export { searchUser, getBalance, getBalance2 };

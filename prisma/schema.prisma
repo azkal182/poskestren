@@ -8,14 +8,31 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  
+  //directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 
 }
+
+model User {
+id            String    @id @default(uuid())
+  name          String
+  username String @unique
+  password String
+	role		String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
 
 model Patient {
   id                String             @id @default(uuid())
   name              String
   address           String?
+  class							String?
+  room							String?
   hospitalizations  Hospitalization?
   checkUps          CheckUp?
   borrowMoneyInCash BorrowMoneyInCash?
@@ -52,7 +69,8 @@ model BorrowMoneyInCash {
   id                String             @id @default(uuid())
   patientId         String    @unique
   checkUpId         String    @unique
-  payment           Float
+  payment           Float?
+	total							Float
   status            String?
   payment_date_time DateTime?
   created_at        DateTime  @default(now())

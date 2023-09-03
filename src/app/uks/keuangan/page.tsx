@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { SearchName } from "@/components/search-sidafa";
-import { getBalance as getSaldo } from "@/lib/sidafa";
+import { getBalance as getSaldo, getBalance2 } from "@/lib/sidafa";
 import AsyncSelect from "react-select/async";
 import { Loader } from "lucide-react";
 import {
@@ -26,56 +26,14 @@ function App() {
   const [selectedValue, setSelectedValue] = useState<IData | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // handle input change event
-  const handleInputChange = (value: any) => {
-    setValue(value);
-  };
 
-  // handle selection
-  const handleChange = async (value: any) => {
-    setSelectedValue(value);
-    setLoading(true);
-    const data = await getBalance(value.accountNumber);
-    setData(data);
-    setLoading(false);
-  };
-
-  const getBalance = async (rek: any) => {
-    const res = await fetch(`/api/sidafa/${rek}`);
-    const { data } = await res.json();
-    console.log(data);
-
-    return data;
-  };
-  // load options using API call
-  const loadOptions = async (inputValue: any) => {
-    const res = await fetch(`/api/sidafa?query=${inputValue}`);
-    //const res =  await fetch(`http://jsonplaceholder.typicode.com/posts?userId=${inputValue}`)
-    //const data = await res.json()
-    const { data } = await res.json();
-
-    return data;
-  };
+  
 
   return (
     <div className="App">
       <h3 className="font-bold text-center text-lg uppercase">Cek Tabungan</h3>
       <pre>Masukan Nama yang akan di cari :</pre>
-      {/*
-      <AsyncSelect
-        cacheOptions
-        defaultOptions
-        value={selectedValue}
-        getOptionLabel={(e:any) => e.name + " - " + e.address}
-        getOptionValue={(e:any) => e.accountNumber}
-        loadOptions={loadOptions}
-        onInputChange={handleInputChange}
-        onChange={handleChange}
-        components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
-className="react-select-container"
-  classNamePrefix="react-select"
-      />
-      */}
+
       <SearchName
         placeholder="Nama"
         autoComplete="off"
@@ -84,10 +42,14 @@ className="react-select-container"
         className="mt-2 w-full border border-slate-300"
         selected={async (data: any) => {
           setLoading(true);
-          const result = await getSaldo(data.accountNumber);
+          
+          const result = await getBalance2(data.accountNumber);
+          
+          
           //@ts-ignore
           setData(result);
           //@ts-ignore
+          setValue(result.name)
           setSelectedValue(data);
           setLoading(false);
         }}

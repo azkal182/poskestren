@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { searchUser } from "@/lib/sidafa";
 import { Loader } from "lucide-react";
 import * as React from "react";
+import axios from "axios";
 
 import { cn } from "@/lib/utils";
 
@@ -19,34 +20,76 @@ const SearchName = React.forwardRef<HTMLInputElement, InputProps>(
     const [inputValue, setInputValue] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [cache, setCache] = useState({});
+    const [cancelTokenSource, setCancelTokenSource] = useState(null);
     const [showAutocomplete, setShowAutocomplete] = useState(false);
     const autocompleteRef = useRef(null);
-    let [isPending, startTransition] = useTransition();
 
-    const delayedSearch = debounce(async (value) => {
+    const delayedSearch = debounce(async (value, source) => {
+    	//@ts-ignore
+      const cachedResults = cache[value];
+      if (cachedResults) {
+        setSearchResults(cachedResults);
+        setShowAutocomplete(true);
+        return;
+      }
       try {
         setIsLoading(true);
-        const results = await searchUser(value); // Replace with your API call
-        //@ts-ignore
-        setSearchResults(results);
-        setShowAutocomplete(true);
+        const response = await fetchData(value, source);
+
+        if (value === inputValue) {
+          setSearchResults(response.data);
+
+          setCache({ ...cache, [inputValue]: response.data });
+          setShowAutocomplete(true);
+        }
       } catch (error) {
-        console.error("Error fetching results:", error);
+        if (axios.isCancel(error)) {
+          console.log("fetch dibatalkan");
+        } else {
+          // Tangani kesalahan lainnya
+        }
       } finally {
         setIsLoading(false);
       }
-    }, 500);
+    }, 300);
 
-    const handleSearch = (e: any) => {
-      const value = e.target.value;
-      setInputValue(value);
-      if (value.length >= 2) {
-        delayedSearch(value);
+    useEffect(() => {
+      if (inputValue.length > 2) {
+        const source = axios.CancelToken.source();
+        //@ts-ignore
+        setCancelTokenSource(source);
+        delayedSearch(inputValue, source);
       } else {
-        setShowAutocomplete(false);
+        //setShowAutocomplete(false)
+        setCache({ ...cache, [inputValue]: [] }); // Simpan input yang tidak valid ke dalam cache
+        setSearchResults([]);
       }
+
+      return () => {
+        if (cancelTokenSource) {
+        	//@ts-ignore
+          cancelTokenSource.cancel("Request canceled due to new input");
+        }
+      };
+    }, [inputValue]);
+
+    const handleSearch = (event:any) => {
+      
+      const query = event.target.value;
+      setInputValue(query);
     };
 
+    const fetchData = async (query: string, source: any) => {
+      try {
+        const response = await axios.get(`/api/sidafa?search=${query}`, {
+          cancelToken: source.token,
+        });
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    };
     useEffect(() => {
       // Function to close the autocomplete when clicking outside of it
       const handleOutsideClick = (event: any) => {
@@ -67,6 +110,7 @@ const SearchName = React.forwardRef<HTMLInputElement, InputProps>(
         document.removeEventListener("mousedown", handleOutsideClick);
       };
     }, []);
+
     return (
       <>
         <div ref={autocompleteRef} className="relative col-start-2 col-span-3">
@@ -74,7 +118,7 @@ const SearchName = React.forwardRef<HTMLInputElement, InputProps>(
             type={type}
             className={cn(
               "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-              className,
+              className
             )}
             //onChange={(e)=>startTransition(()=>console.log(e.target.value))}
             ref={ref}
@@ -112,7 +156,7 @@ const SearchName = React.forwardRef<HTMLInputElement, InputProps>(
         </div>
       </>
     );
-  },
+  }
 );
 SearchName.displayName = "SearchName";
 export { SearchName };

@@ -10,5 +10,14 @@ module.exports = withPWA({
   experimental: {
     serverActions: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/uks',
+        permanent: true,
+      },
+    ]
+  },
   // Your Next.js config
 });

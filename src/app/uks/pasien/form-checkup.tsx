@@ -75,40 +75,23 @@ export default function FormCheckup({
     // setIsSubmiting(true);
     // await createPatient(values);
     // form.reset();
-    // modalClose();
     // setIsSubmiting(false);
-    // toast({
-    //   title: "Data berhasil ditambahkan",
-    //   description: "NAMA " + values.name,
-    // });
+    
 
     values.patientId = uuidv4();
     values.id = uuidv4();
-    console.log(JSON.stringify(values, null, 2));
-    alert(JSON.stringify(values, null, 2));
+    
+    
+     modalClose();
+     //@ts-ignore
     await addCheckUp(values);
+    toast({
+      title: "Data berhasil ditambahkan",
+       description: "NAMA " + values.name,
+     });
   }
 
-  useEffect(() => {
-    // Function to close the autocomplete when clicking outside of it
-    const handleOutsideClick = (event: any) => {
-      if (
-        autocompleteRef.current &&
-        //@ts-ignore
-        !autocompleteRef.current.contains(event.target)
-      ) {
-        setShowAutocomplete(false);
-      }
-    };
-
-    // Attach the outside click event listener
-    document.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      // Clean up the event listener on unmount
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
+  
 
   console.log(hostels);
   return (

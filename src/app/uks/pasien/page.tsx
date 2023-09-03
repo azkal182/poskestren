@@ -1,5 +1,6 @@
 import React from 'react'
 import PatientOptimisticPage from './optimistic'
+import prisma from "@/lib/prisma"
 
 async function CheckupPage() {
   const data = await prisma?.checkUp.findMany({
@@ -12,7 +13,7 @@ async function CheckupPage() {
     },
   })
   const hostels = await prisma?.hostel.findMany()
-
+console.log(JSON.stringify(data,null,2))
   return (
     <div>
       <PatientOptimisticPage data={data} hostels={hostels}/>

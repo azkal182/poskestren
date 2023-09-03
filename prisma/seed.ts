@@ -15,6 +15,10 @@ async function main() {
     },
     {
       id: v4(),
+      name: "MA'WA",
+    },
+    {
+      id: v4(),
       name: "TAKHOSUS",
     },
     {
@@ -35,10 +39,30 @@ async function main() {
     },
     // Add more patient data here if needed
   ];
+  
+  const users = [
+  	{
+  		name:'uks',
+  		username: 'uks',
+  		password: 'uks',
+  		role:'uks'
+  	},
+  	  	{
+  		name:'asrama',
+  		username: 'asrama',
+  		password: 'asrama',
+  		role:'asrama'
+  	}
+  	]
 
   for (const patient of patients) {
     await prisma.hostel.create({
       data: patient,
+    });
+  }
+  for (const user of users) {
+    await prisma.user.create({
+      data: user,
     });
   }
 }

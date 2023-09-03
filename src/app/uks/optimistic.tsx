@@ -98,7 +98,7 @@ export default function Optimistic({
       </h1>
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-center rounded-full bg-blue-400 w-12 h-12 text-white fixed bottom-[70px] right-[20px]"
+        className="flex items-center justify-center rounded-full bg-blue-400 w-12 h-12 text-white fixed bottom-[70px] right-[20px] shadow-lg transform active:scale-90 transition-transform"
       >
         <Plus />
       </button>

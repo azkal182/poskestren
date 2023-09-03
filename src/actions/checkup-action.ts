@@ -8,10 +8,10 @@ export interface ICheckUp {
   hostelId: string;
   requirement: string;
   paymentSource: string;
-  paymentTotal: null;
-  pinjam: null;
-  payment: null;
-  description: string;
+  paymentTotal?: string | null;
+  pinjam?: string | null;
+  payment?: string | null;
+  description?: string;
   patientId: string;
   id: string;
 }
@@ -23,9 +23,9 @@ export async function addCheckUp(FormData: ICheckUp) {
       id: data.id,
       payment_source: data.paymentSource,
       requirement: data.requirement,
-      payment: data.payment,
-      payment_total: data.paymentTotal,
-      status: data.paymentTotal ? "- " + data.paymentTotal : "",
+      payment: parseFloat(data.payment as string),
+      payment_total: parseFloat(data.paymentTotal as string),
+      status: data.paymentSource.toLowerCase() === "sendiri" || data.paymentSource.toLowerCase() ===  "cash" ? "lunas" : parseFloat(data.paymentTotal as string) ? "- " + parseFloat(data.paymentTotal as string) : "",
       patient: {
         create: {
           name: data.name,
@@ -41,6 +41,19 @@ export async function addCheckUp(FormData: ICheckUp) {
   });
   //return result;
   revalidatePath("/checkups");
+}
+
+export async function addTotalCheckUp(data:any){
+	await prisma.checkUp.update({
+		where:{
+			id:data.id
+		},
+		data:{
+			payment_total: parseFloat(data.paymentTotal),
+			status: (parseFloat(data.paymentTotal) * -1).toString()
+		}
+	})
+	revalidatePath("/checkups");
 }
 
 // export async function returnHospitalization(

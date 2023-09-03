@@ -59,7 +59,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataTableFacetedFilter } from "./data-table-filter";
-import { useHospitalization } from "@/hooks/useHospitalization";
+
 import { useToast } from "@/components/ui/use-toast";
 
 interface DataTableProps<TData, TValue> {
@@ -114,7 +114,7 @@ export default function DataTable<TData, TValue>({
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteData, setDeleteData] = useState<THospitalization>({});
   const { toast } = useToast();
-  const { updateHospitalization } = useHospitalization();
+  
   const handleUpdate = async () => {
     const selisih = Math.floor(
       //@ts-ignore

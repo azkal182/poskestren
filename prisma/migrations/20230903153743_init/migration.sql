@@ -1,8 +1,23 @@
 -- CreateTable
+CREATE TABLE "users" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "role" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Patient" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "address" TEXT,
+    "class" TEXT,
+    "room" TEXT,
     "hostelId" TEXT NOT NULL,
 
     CONSTRAINT "Patient_pkey" PRIMARY KEY ("id")
@@ -41,7 +56,8 @@ CREATE TABLE "BorrowMoneyInCash" (
     "id" TEXT NOT NULL,
     "patientId" TEXT NOT NULL,
     "checkUpId" TEXT NOT NULL,
-    "payment" DOUBLE PRECISION NOT NULL,
+    "payment" DOUBLE PRECISION,
+    "total" DOUBLE PRECISION NOT NULL,
     "status" TEXT,
     "payment_date_time" TIMESTAMP(3),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -57,6 +73,9 @@ CREATE TABLE "Hostel" (
 
     CONSTRAINT "Hostel_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Hospitalization_patientId_key" ON "Hospitalization"("patientId");

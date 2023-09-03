@@ -9,6 +9,8 @@ interface HospitalizationFormData {
   address: string;
   hostelId: string;
   complaint: string;
+  class?: string;
+  room?: string;
 }
 
 interface IReturnHospitalization {
@@ -27,6 +29,7 @@ export async function addHospitalization(FormData: HospitalizationFormData) {
           id: data.patientId,
           name: data.name,
           address: data.address,
+          class: data.class,
           hostel: {
             connect: {
               id: data.hostelId,

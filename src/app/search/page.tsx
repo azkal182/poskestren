@@ -42,7 +42,8 @@ const SearchAutocomplete = () => {
       //@ts-ignore
       if (
         autocompleteRef.current &&
-        !autocompleteRef.current.contains(event.target)
+        //@ts-ignore
+        !autocompleteRef.current?.contains(event.target)
       ) {
         setShowAutocomplete(false);
       }

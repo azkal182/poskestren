@@ -43,7 +43,7 @@ function App() {
         selected={async (data: any) => {
           setLoading(true);
           
-          const result = await getBalance2(data.accountNumber);
+          const result = await getSaldo(data.accountNumber);
           
           
           //@ts-ignore

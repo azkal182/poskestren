@@ -172,7 +172,7 @@ async function getBalance2(rek: string): Promise<Result> {
       headers,
     });
     
-  //  console.log(response.data)
+    console.log(response.data)
 
     const $ = cheerio.load(response.data);
     const transactions: any = [];

@@ -145,7 +145,7 @@ async function getBalance(rek: string): Promise<Result> {
 
     let totalAmount = 0;
 
-    filter.forEach((item) => {
+    filter.forEach((item:any) => {
       const amountWithoutCommas = parseFloat(
         item.amount.replace(/[^0-9.-]+/g, "")
       );

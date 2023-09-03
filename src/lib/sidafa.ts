@@ -8,6 +8,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 interface Result {
   balance?: string;
   transactions?: ITransactions[];
+  totalAmount?: any;
 }
 
 interface ITransactions {

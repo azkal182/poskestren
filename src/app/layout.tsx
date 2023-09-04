@@ -2,7 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
-
+import NextTopLoader from 'nextjs-toploader';
 import TopBar from "@/components/layouts/top-bar";
 import FloatingNavbar from "@/components/layouts/floating-navbar";
 import { Inter } from "next/font/google";
@@ -39,6 +39,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <NextTopLoader />
           <TopBar />
           <main className="p-2 pb-14 md:pb-0">{children}</main>
           <Toaster />

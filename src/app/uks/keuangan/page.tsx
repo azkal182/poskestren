@@ -18,11 +18,20 @@ interface IData {
   name?: string;
   address?: string;
   accountNumber?: string;
+  totalAmount?: string;
+}
+interface IBalance {
+  balance?: string|undefined;
+  totalAmount?: string|undefined;
+}
+
+interface ITransaction {
+	
 }
 
 function App() {
   const [inputValue, setValue] = useState("");
-  const [data, setData] = useState("");
+  const [data, setData] = useState<IBalance>({});
   const [selectedValue, setSelectedValue] = useState<IData | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -73,16 +82,16 @@ const formatNumber = (value:any)=>{
               </div>
               <div>Saldo</div>
               <div className="col-span-3 font-bold">
-                : {/*@ts-ignore */}
+                : {/*@ts-ignore*/}
                Rp.  {data?.balance ? formatNumber(data?.balance) : 0}{" "}
               </div>
-              {/*
+              
               <div>Jumlah</div>
               <div className="col-span-3 font-bold">
-                : 
-                Rp. {data?.totalAmount.toLocaleString('id-ID') || 0}{" "}
+                : {/*@ts-ignore*/}
+                Rp. {data?.totalAmount ? data?.totalAmount.toLocaleString('id-ID') : 0}{" "}
               </div>
-              */}
+              
             </div>
             <Table className="mt-2">
               <TableCaption>A list of your recent debit.</TableCaption>

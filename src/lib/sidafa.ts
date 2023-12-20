@@ -83,7 +83,7 @@ async function login(): Promise<void> {
     "Referrer-Policy": "strict-origin-when-cross-origin",
     Cookie: "PHPSESSID=" + cook,
   };
-  const data = "i0=kesehatan+putra&i1=kesehatan11";
+  const data = "i0=kesehatan+putra&i1=kesehatanputra";
 
   try {
     await axios.post(url, data, {
